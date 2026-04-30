@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAP PRO — Long Snapper AI Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{--black:#0a0a0a;--dark:#111318;--panel:#161a22;--border:#252b38;--gold:#f5c842;--gold-dim:#a88520;--steel:#8fa3b8;--white:#eef2f7;--red:#e03535;--green:#2ecc8a;}
+  body{background:var(--black);color:var(--white);font-family:system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  @keyframes bball{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  @keyframes glow{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes dotbounce{0%,80%,100%{transform:translateY(0);opacity:0.4;}40%{transform:translateY(-5px);opacity:1;}}
+
+  /* HEADER */
+  #header{background:var(--dark);border-bottom:2px solid var(--gold);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;}
+  .logo-main{font-family:'Bebas Neue',cursive;font-size:1.9rem;color:var(--gold);letter-spacing:3px;}
+  .logo-sub{font-family:'Bebas Neue',cursive;font-size:0.9rem;color:var(--steel);letter-spacing:4px;border-left:1px solid var(--border);padding-left:10px;margin-left:10px;}
+  .status-badge{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:5px 12px;}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:glow 2s infinite;}
+  .status-text{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;color:var(--steel);letter-spacing:2px;text-transform:uppercase;}
+
+  /* LAYOUT */
+  #app{display:flex;flex:1;overflow:hidden;}
+
+  /* SIDEBAR */
+  #sidebar{width:215px;background:var(--dark);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+  .sidebar-section{padding:14px 12px 8px;}
+  .sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+  .topic-btn{display:flex;align-items:center;gap:9px;width:100%;background:transparent;border:none;border-left:2px solid transparent;border-radius:0 4px 4px 0;padding:8px 10px;color:var(--steel);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;text-align:left;margin-bottom:1px;transition:all 0.15s;}
+  .topic-btn:hover{background:rgba(245,200,66,0.08);color:var(--gold);}
+  .topic-btn.active{background:rgba(245,200,66,0.1);color:var(--gold);border-left-color:var(--gold);}
+  .level-section{padding:12px;border-top:1px solid var(--border);margin-top:auto;}
+  .level-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+  .level-pill{background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;color:var(--steel);cursor:pointer;transition:all 0.15s;}
+  .level-pill.active{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:700;}
+
+  /* CHAT */
+  #chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  #chat-area{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+
+  /* WELCOME */
+  #welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:14px;padding:20px;}
+  #welcome h2{font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:4px;color:var(--gold);}
+  #welcome p{color:#7a90a8;max-width:440px;line-height:1.6;font-size:0.93rem;}
+  .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;width:100%;margin-top:4px;}
+  .quick-btn{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--steel);font-size:0.82rem;cursor:pointer;text-align:left;line-height:1.4;transition:all 0.2s;}
+  .quick-btn:hover{border-color:var(--gold);color:var(--white);}
+  .quick-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+
+  /* MESSAGES */
+  .message{display:flex;gap:12px;animation:fadeUp 0.25s ease;max-width:88%;}
+  .message.user{flex-direction:row-reverse;align-self:flex-end;}
+  .message.ai{align-self:flex-start;}
+  .avatar{width:34px;height:34px;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+  .avatar.ai{background:linear-gradient(135deg,var(--gold),#c8960a);}
+  .avatar.user{background:#1a2438;border:1px solid var(--border);}
+  .bubble{padding:12px 16px;font-size:0.93rem;line-height:1.75;white-space:pre-wrap;}
+  .message.ai .bubble{background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
+  .message.user .bubble{background:#1a2438;border:1px solid #2a3550;border-radius:6px 2px 6px 6px;}
+
+  /* TYPING */
+  #typing{display:none;align-items:center;gap:12px;}
+  .typing-dots{display:flex;gap:5px;padding:12px 16px;background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:dotbounce 1.2s infinite;}
+  .dot:nth-child(2){animation-delay:0.2s;}
+  .dot:nth-child(3){animation-delay:0.4s;}
+
+  /* ERROR */
+  #error-msg{display:none;background:rgba(224,53,53,0.08);border:1px solid rgba(224,53,53,0.25);border-radius:6px;padding:12px 16px;color:var(--red);font-size:0.85rem;line-height:1.5;}
+
+  /* INPUT */
+  #input-zone{border-top:1px solid var(--border);background:var(--dark);padding:12px 24px 14px;flex-shrink:0;}
+  #input-row{display:flex;gap:10px;align-items:flex-end;max-width:800px;margin:0 auto;}
+  #user-input{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--white);font-size:0.93rem;resize:none;min-height:46px;max-height:130px;line-height:1.5;transition:border-color 0.2s;font-family:system-ui;outline:none;}
+  #user-input:focus{border-color:var(--gold-dim);}
+  #send-btn{background:var(--gold);border:none;border-radius:6px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--black);font-size:1.1rem;flex-shrink:0;}
+  #send-btn:hover{background:#ffd54f;}
+  #send-btn:disabled{background:#2a3040;cursor:not-allowed;}
+  #input-hint{text-align:center;font-size:0.67rem;color:#1e2a38;margin-top:7px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;}
+
+  @media(max-width:600px){
+    #sidebar{display:none;}
+    .quick-grid{grid-template-columns:1fr;}
+    #chat-area{padding:14px;}
+    #input-zone{padding:10px 14px 12px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div style="display:flex;align-items:baseline;">
+    <span class="logo-main">🏈 SNAP PRO</span>
+    <span class="logo-sub">AI COACH</span>
+  </div>
+  <div class="status-badge">
+    <div class="status-dot"></div>
+    <span class="status-text">Coach Online</span>
+  </div>
+</div>
+
+<div id="app">
+  <div id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Training Topics</div>
+      <button class="topic-btn active" onclick="setTopic(this,'Technique & Drills')">🎯 Technique & Drills</button>
+      <button class="topic-btn" onclick="setTopic(this,'Punt Snapping')">🏈 Punt Snapping</button>
+      <button class="topic-btn" onclick="setTopic(this,'FG / PAT Snapping')">🥅 FG / PAT Snapping</button>
+      <button class="topic-btn" onclick="setTopic(this,'Strength & Power')">💪 Strength & Power</button>
+      <button class="topic-btn" onclick="setTopic(this,'Speed & Conditioning')">⚡ Speed & Conditioning</button>
+      <button class="topic-btn" onclick="setTopic(this,'Blocking & Gunner')">🛡️ Blocking & Gunner</button>
+      <button class="topic-btn" onclick="setTopic(this,'Nutrition & Recovery')">🥗 Nutrition & Recovery</button>
+      <button class="topic-btn" onclick="setTopic(this,'Recruiting & Film')">🎓 Recruiting & Film</button>
+      <button class="topic-btn" onclick="setTopic(this,'Mental Game')">🧠 Mental Game</button>
+    </div>
+    <div class="level-section">
+      <div class="sidebar-label">My Level</div>
+      <div class="level-pills">
+        <button class="level-pill" onclick="setLevel(this,'Youth')">Youth</button>
+        <button class="level-pill active" onclick="setLevel(this,'HS')">HS</button>
+        <button class="level-pill" onclick="setLevel(this,'College')">College</button>
+        <button class="level-pill" onclick="setLevel(this,'NFL')">NFL</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat-main">
+    <div id="chat-area">
+      <div id="welcome">
+        <div style="font-size:3rem;animation:bball 2s infinite;">🏈</div>
+        <h2>YOUR LONG SNAPPING COACH</h2>
+        <p>Expert AI coaching from youth to NFL. Punt and FG snapping treated as the distinct skills they are. Select your level and ask anything.</p>
+        <div class="quick-grid">
+          <button class="quick-btn" onclick="sendQuick('Break down punt snapping mechanics and distances by level')"><div class="quick-label">🏈 Punt Snap</div>Punt snap mechanics & distances by level</button>
+          <button class="quick-btn" onclick="sendQuick('Explain FG/PAT snapping — what does snapping to a spot mean?')"><div class="quick-label">🥅 FG Snap</div>FG/PAT — what snapping to a spot means</button>
+          <button class="quick-btn" onclick="sendQuick('Give me specific drills for both punt and FG snapping')"><div class="quick-label">⚡ Drills</div>Drills for punt and FG snapping</button>
+          <button class="quick-btn" onclick="sendQuick('How do I get recruited as a long snapper for college football?')"><div class="quick-label">🎓 Recruiting</div>College recruiting roadmap</button>
+          <button class="quick-btn" onclick="sendQuick('Build me a strength program designed specifically for long snappers')"><div class="quick-label">💪 Strength</div>Strength program for long snappers</button>
+          <button class="quick-btn" onclick="sendQuick('How do I stay mentally locked in after a bad snap?')"><div class="quick-label">🧠 Mental Game</div>Staying locked in after a bad snap</button>
+        </div>
+      </div>
+      <div id="typing">
+        <div class="avatar ai">🏈</div>
+        <div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div id="error-msg"></div>
+    </div>
+    <div id="input-zone">
+      <div id="input-row">
+        <textarea id="user-input" placeholder="Ask your long snapping coach anything... (Enter to send)" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button id="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+      <div id="input-hint">SNAP PRO · Punt & FG Snapping · Youth through NFL · Enter to send</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are SNAP PRO — an elite, world-class AI coach specializing exclusively in long snapping at every level of football, from youth leagues through the NFL. You have the combined expertise of top long snapping coaches like Ethan Albright, Patrick Mannelly, and elite private coaches.
+
+TECHNIQUE & DRILLS:
+Proper stance: feet shoulder-width, toes slightly out, hips above knees, balanced weight distribution, back flat, head down through the snap.
+Grip mechanics: laces positioned correctly, index finger pressure on tip, firm but not tense grip, wrist cocked for power transfer.
+Release: snap begins from cocked wrist position, full arm extension through the ball, follow through matters.
+
+PUNT SNAPPING — DISTANCES BY LEVEL (this is critical):
+- Youth: 7-10 yards to the punter
+- High School: 12-13 yards to the punter
+- College: 13-15 yards to the punter
+- NFL: 15 yards — this is the standard professional punt snap distance
+
+Target: the PUNTER'S HANDS — a person-sized moving target at the appropriate distance for the level.
+The snapper must lead the punter slightly, accounting for the punter's drop and body movement.
+Trajectory: chest-to-thigh height, a catchable spiral the punter can handle cleanly and drop in rhythm.
+Timing standards:
+- Youth: 1.0-1.2 seconds is acceptable, work toward sub-1.0
+- High School: 0.8-0.9 seconds
+- College: 0.75-0.8 seconds
+- NFL: 0.7-0.75 seconds — anything above 0.8 at the NFL level is dangerously slow
+
+FIELD GOAL & PAT SNAPPING — fundamentally different from punt:
+Distance by level:
+- Youth: 5-6 yards to the holder's spot
+- High School: 6-7 yards to the holder's spot
+- College: 7-8 yards to the holder's spot
+- NFL: 8 yards — this is the standard professional FG/PAT snap distance
+
+Target: a SPOT ON THE GROUND — not a person, not moving hands.
+The holder sets their hands at a precise, fixed location just off the turf.
+The ball must come TO that spot — the holder does NOT move to catch it.
+Snap must arrive in 0.60-0.65 seconds (NFL standard). Lower levels 0.65-0.75 seconds.
+Trajectory is lower and flatter than a punt snap.
+Lace control is critical: laces must arrive positioned so the holder can rotate them to face the kicker in one smooth motion.
+An inch off the spot costs the holder critical rotation time and kills the kick.
+
+KEY COACHING POINT:
+- Punt = lead the punter's hands at the correct distance for your level (15 yards at NFL)
+- FG/PAT = hit a fixed spot on the ground (8 yards at NFL, shorter at lower levels)
+
+DRILLS:
+Punt drills: snap at the correct distance for your level, partner walks/shifts pre-snap, consistency charting, timed reps, work up to full distance progressively.
+FG drills: snap to a taped X on the ground, holder kneels with hands at fixed position, lace drill, blindfold snaps to spot, timed reps.
+Both: wall snaps, bungee resistance, mirror snaps, upside-down work, burst count practice, video review.
+
+STRENGTH & CONDITIONING:
+Primary lifts: Deadlift, Romanian deadlift, hex bar deadlift — hip hinge power is the engine of the snap.
+Upper body: Pull-ups, rows, shoulder press, tricep work for follow-through power.
+Core: Anti-rotation (pallof press), plank variations, landmine rotations.
+Explosive: Power cleans, medicine ball hip hinge throws, band-resisted snaps.
+Grip & forearm: Grip strengtheners, wrist roller — critical for lace control on FG and velocity on long punt snaps.
+Programs: Youth (bodyweight focus), HS (3-day split), College (4-day periodized), NFL (year-round periodized).
+
+SPEED & CONDITIONING:
+Sub-5.0 forty preferred at college and pro levels.
+10-yard burst out of stance for coverage lane release.
+Agility: cone drills for evading jammers post-snap.
+Gunner release techniques: rip, swim, push-pull.
+
+BLOCKING & COVERAGE:
+FG/PAT post-snap: block the defensive tackle or nose guard before releasing.
+Punt post-snap: release immediately into coverage lane.
+Punt gunner release: rip, swim, push-pull against jammers — practice every day.
+Tackling in space: proper form tackle angles on returners.
+Special teams IQ: shield punt, spread punt, traditional protections.
+
+NUTRITION & RECOVERY:
+Body composition: NFL 240-265 lbs, College 225-255 lbs, HS 200-240 lbs, Youth focus on healthy habits.
+Pre-practice: complex carbs 2-3 hours before, light snack 30-60 min before.
+Post-workout: 20-40g protein within 45 minutes, replenish glycogen with carbs.
+Hydration: 0.5 oz per lb of bodyweight daily, add electrolytes on heavy training days.
+Sleep: 8-9 hours — most skill development happens during sleep.
+Supplements: Creatine monohydrate 5g/day, protein powder if needed, electrolytes.
+Recovery: Foam rolling hip flexors and thoracic spine daily, contrast showers.
+
+RECRUITING:
+High School: Highlight film by sophomore year — 10+ clean punt snaps AND 10+ FG/PAT snaps filmed from directly behind center.
+Camps: Chris Rubio Long Snapping, Greg Autry, ACES Football.
+College: Preferred walk-on is a very common and legitimate path. Email coaches directly with your film.
+NFL path: College starter → UDFA → Training camp → Practice squad → 53-man roster.
+
+MENTAL GAME:
+Pre-snap routine: same routine every snap — stance, grip, breath, focal point, snap.
+Short memory: every elite snapper has had a bad snap. The great ones forget it in 3 seconds and reset.
+Visualization: mentally rehearse perfect snaps daily — both punt and FG.
+Crowd noise: practice silent count snapping.
+
+Always adjust advice to the player's specific level. Be direct, technical, motivating, and specific.`;
+
+let currentTopic = 'Technique & Drills';
+let currentLevel = 'HS';
+let isLoading = false;
+let history = [];
+
+function setTopic(btn, topic) {
+  currentTopic = topic;
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setLevel(pill, level) {
+  currentLevel = level;
+  document.querySelectorAll('.level-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function sendQuick(text) {
+  document.getElementById('user-input').value = text;
+  sendMessage();
+}
+
+function hideWelcome() {
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = '⚠️ ' + msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+function addMessage(role, content) {
+  hideWelcome();
+  hideError();
+  const area = document.getElementById('chat-area');
+  const typing = document.getElementById('typing');
+  const error = document.getElementById('error-msg');
+
+  const div = document.createElement('div');
+  div.className = 'message ' + role;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ' + role;
+  avatar.textContent = role === 'ai' ? '🏈' : '👤';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = content;
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  area.insertBefore(div, typing);
+  error.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  area.scrollTop = area.scrollHeight;
+}
+
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+  isLoading = true;
+  hideError();
+
+  addMessage('user', text);
+  document.getElementById('typing').style.display = 'flex';
+  document.getElementById('chat-area').scrollTop = 99999;
+
+  const fullMsg = `Player level: ${currentLevel} | Topic: ${currentTopic}\n\n${text}`;
+  const newHistory = [...history, { role: 'user', content: fullMsg }];
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: newHistory
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    const reply = data.content?.[0]?.text;
+    if (!reply) throw new Error('No response received');
+
+    history = [...newHistory, { role: 'assistant', content: reply }];
+    document.getElementById('typing').style.display = 'none';
+    addMessage('ai', reply);
+
+  } catch (err) {
+    document.getElementById('typing').style.display = 'none';
+    showError(err.message || 'Something went wrong. Please try again.');
+  } finally {
+    isLoading = false;
+    document.getElementById('send-btn').disabled = false;
+  }
+}
+</script>
+</body>
+</html>
