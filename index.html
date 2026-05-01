@@ -6,71 +6,210 @@
 <title>SNAP PRO — Long Snapper AI Coach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;}
-  :root{--black:#0a0a0a;--dark:#111318;--panel:#161a22;--border:#252b38;--gold:#f5c842;--gold-dim:#a88520;--steel:#8fa3b8;--white:#eef2f7;--red:#e03535;--green:#2ecc8a;}
-  body{background:var(--black);color:var(--white);font-family:system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-  ::-webkit-scrollbar{width:5px;}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-  @keyframes bball{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
-  @keyframes glow{0%,100%{opacity:1;}50%{opacity:0.4;}}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-  @keyframes dotbounce{0%,80%,100%{transform:translateY(0);opacity:0.4;}40%{transform:translateY(-5px);opacity:1;}}
-  #header{background:var(--dark);border-bottom:2px solid var(--gold);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;}
-  .logo-main{font-family:'Bebas Neue',cursive;font-size:1.9rem;color:var(--gold);letter-spacing:3px;}
-  .logo-sub{font-family:'Bebas Neue',cursive;font-size:0.9rem;color:var(--steel);letter-spacing:4px;border-left:1px solid var(--border);padding-left:10px;margin-left:10px;}
-  .status-badge{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:5px 12px;}
-  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:glow 2s infinite;}
-  .status-text{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;color:var(--steel);letter-spacing:2px;text-transform:uppercase;}
-  #app{display:flex;flex:1;overflow:hidden;}
-  #sidebar{width:215px;background:var(--dark);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
-  .sidebar-section{padding:14px 12px 8px;}
-  .sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-  .topic-btn{display:flex;align-items:center;gap:9px;width:100%;background:transparent;border:none;border-left:2px solid transparent;border-radius:0 4px 4px 0;padding:8px 10px;color:var(--steel);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;text-align:left;margin-bottom:1px;transition:all 0.15s;}
-  .topic-btn:hover{background:rgba(245,200,66,0.08);color:var(--gold);}
-  .topic-btn.active{background:rgba(245,200,66,0.1);color:var(--gold);border-left-color:var(--gold);}
-  .level-section{padding:12px;border-top:1px solid var(--border);margin-top:auto;}
-  .level-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
-  .level-pill{background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;color:var(--steel);cursor:pointer;transition:all 0.15s;}
-  .level-pill.active{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:700;}
-  #chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-  #chat-area{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
-  #welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:14px;padding:20px;}
-  #welcome h2{font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:4px;color:var(--gold);}
-  #welcome p{color:#7a90a8;max-width:440px;line-height:1.6;font-size:0.93rem;}
-  .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;width:100%;margin-top:4px;}
-  .quick-btn{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--steel);font-size:0.82rem;cursor:pointer;text-align:left;line-height:1.4;transition:all 0.2s;}
-  .quick-btn:hover{border-color:var(--gold);color:var(--white);}
-  .quick-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
-  .message{display:flex;gap:12px;animation:fadeUp 0.25s ease;max-width:88%;}
-  .message.user{flex-direction:row-reverse;align-self:flex-end;}
-  .message.ai{align-self:flex-start;}
-  .avatar{width:34px;height:34px;border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
-  .avatar.ai{background:linear-gradient(135deg,var(--gold),#c8960a);}
-  .avatar.user{background:#1a2438;border:1px solid var(--border);}
-  .bubble{padding:12px 16px;font-size:0.93rem;line-height:1.75;white-space:pre-wrap;}
-  .message.ai .bubble{background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
-  .message.user .bubble{background:#1a2438;border:1px solid #2a3550;border-radius:6px 2px 6px 6px;}
-  #typing{display:none;align-items:center;gap:12px;}
-  .typing-dots{display:flex;gap:5px;padding:12px 16px;background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:dotbounce 1.2s infinite;}
-  .dot:nth-child(2){animation-delay:0.2s;}
-  .dot:nth-child(3){animation-delay:0.4s;}
-  #error-msg{display:none;background:rgba(224,53,53,0.08);border:1px solid rgba(224,53,53,0.25);border-radius:6px;padding:12px 16px;color:var(--red);font-size:0.85rem;line-height:1.5;margin:0 0 8px 0;}
-  #input-zone{border-top:1px solid var(--border);background:var(--dark);padding:12px 24px 14px;flex-shrink:0;}
-  #input-row{display:flex;gap:10px;align-items:flex-end;max-width:800px;margin:0 auto;}
-  #user-input{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--white);font-size:0.93rem;resize:none;min-height:46px;max-height:130px;line-height:1.5;transition:border-color 0.2s;font-family:system-ui;outline:none;}
-  #user-input:focus{border-color:var(--gold-dim);}
-  #send-btn{background:var(--gold);border:none;border-radius:6px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--black);font-size:1.1rem;flex-shrink:0;}
-  #send-btn:hover{background:#ffd54f;}
-  #send-btn:disabled{background:#2a3040;cursor:not-allowed;}
-  #input-hint{text-align:center;font-size:0.67rem;color:#1e2a38;margin-top:7px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;}
-  @media(max-width:600px){#sidebar{display:none;}.quick-grid{grid-template-columns:1fr;}#chat-area{padding:14px;}#input-zone{padding:10px 14px 12px;}}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0a0a0a;
+    --dark: #111318;
+    --panel: #161a22;
+    --border: #252b38;
+    --gold: #f5c842;
+    --gold-dim: #a88520;
+    --steel: #8fa3b8;
+    --white: #eef2f7;
+    --red: #e03535;
+    --green: #2ecc8a;
+  }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: system-ui, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @keyframes bball { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes glow { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes dotbounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-5px); opacity: 1; } }
+
+  /* HEADER */
+  #header {
+    background: var(--dark);
+    border-bottom: 2px solid var(--gold);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    flex-shrink: 0;
+  }
+  .logo-wrap { display: flex; align-items: baseline; }
+  .logo-main { font-family: 'Bebas Neue', cursive; font-size: 1.9rem; color: var(--gold); letter-spacing: 3px; }
+  .logo-sub { font-family: 'Bebas Neue', cursive; font-size: 0.9rem; color: var(--steel); letter-spacing: 4px; border-left: 1px solid var(--border); padding-left: 10px; margin-left: 10px; }
+  .status-badge { display: flex; align-items: center; gap: 7px; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 5px 12px; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: glow 2s infinite; }
+  .status-text { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; color: var(--steel); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* LAYOUT */
+  #app { display: flex; flex: 1; overflow: hidden; }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 215px;
+    background: var(--dark);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+  .sidebar-section { padding: 14px 12px 8px; }
+  .sidebar-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-left: 2px solid transparent;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 10px;
+    color: var(--steel);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 1px;
+    transition: all 0.15s;
+  }
+  .topic-btn:hover { background: rgba(245,200,66,0.08); color: var(--gold); }
+  .topic-btn.active { background: rgba(245,200,66,0.1); color: var(--gold); border-left-color: var(--gold); }
+  .level-section { padding: 12px; border-top: 1px solid var(--border); margin-top: auto; }
+  .level-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .level-pill {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem;
+    color: var(--steel);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .level-pill.active { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 700; }
+
+  /* CHAT */
+  #chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #chat-area { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* WELCOME */
+  #welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; gap: 14px; padding: 20px; }
+  #welcome h2 { font-family: 'Bebas Neue', cursive; font-size: 2rem; letter-spacing: 4px; color: var(--gold); }
+  #welcome p { color: #7a90a8; max-width: 440px; line-height: 1.6; font-size: 0.93rem; }
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 560px; width: 100%; margin-top: 4px; }
+  .quick-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 14px;
+    color: var(--steel);
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.4;
+    transition: all 0.2s;
+  }
+  .quick-btn:hover { border-color: var(--gold); color: var(--white); }
+  .quick-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+
+  /* MESSAGES */
+  .message { display: flex; gap: 12px; animation: fadeUp 0.25s ease; max-width: 88%; }
+  .message.user { flex-direction: row-reverse; align-self: flex-end; }
+  .message.ai { align-self: flex-start; }
+  .avatar { width: 34px; height: 34px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .avatar.ai { background: linear-gradient(135deg, var(--gold), #c8960a); }
+  .avatar.user { background: #1a2438; border: 1px solid var(--border); }
+  .bubble { padding: 12px 16px; font-size: 0.93rem; line-height: 1.75; white-space: pre-wrap; }
+  .message.ai .bubble { background: #161c2a; border: 1px solid var(--border); border-radius: 2px 6px 6px 6px; }
+  .message.user .bubble { background: #1a2438; border: 1px solid #2a3550; border-radius: 6px 2px 6px 6px; }
+
+  /* TYPING */
+  #typing { display: none; align-items: center; gap: 12px; }
+  .typing-dots { display: flex; gap: 5px; padding: 12px 16px; background: #161c2a; border: 1px solid var(--border); border-radius: 2px 6px 6px 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: dotbounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ERROR */
+  #error-msg { display: none; background: rgba(224,53,53,0.08); border: 1px solid rgba(224,53,53,0.25); border-radius: 6px; padding: 12px 16px; color: var(--red); font-size: 0.85rem; line-height: 1.5; margin-bottom: 8px; }
+
+  /* INPUT */
+  #input-zone { border-top: 1px solid var(--border); background: var(--dark); padding: 12px 24px 14px; flex-shrink: 0; }
+  #input-row { display: flex; gap: 10px; align-items: flex-end; max-width: 800px; margin: 0 auto; }
+  #user-input {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 14px;
+    color: var(--white);
+    font-size: 0.93rem;
+    resize: none;
+    min-height: 46px;
+    max-height: 130px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    font-family: system-ui;
+    outline: none;
+  }
+  #user-input:focus { border-color: var(--gold-dim); }
+  #send-btn {
+    background: var(--gold);
+    border: none;
+    border-radius: 6px;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--black);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  #send-btn:hover { background: #ffd54f; }
+  #send-btn:disabled { background: #2a3040; cursor: not-allowed; }
+  #input-hint { text-align: center; font-size: 0.67rem; color: #1e2a38; margin-top: 7px; letter-spacing: 1px; font-family: 'Barlow Condensed', sans-serif; }
+
+  @media (max-width: 600px) {
+    #sidebar { display: none; }
+    .quick-grid { grid-template-columns: 1fr; }
+    #chat-area { padding: 14px; }
+    #input-zone { padding: 10px 14px 12px; }
+  }
 </style>
 </head>
 <body>
 
 <div id="header">
-  <div style="display:flex;align-items:baseline;">
+  <div class="logo-wrap">
     <span class="logo-main">🏈 SNAP PRO</span>
     <span class="logo-sub">AI COACH</span>
   </div>
@@ -84,23 +223,23 @@
   <div id="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Training Topics</div>
-      <button class="topic-btn active" onclick="setTopic(this,'Technique & Drills')">🎯 Technique & Drills</button>
-      <button class="topic-btn" onclick="setTopic(this,'Punt Snapping')">🏈 Punt Snapping</button>
-      <button class="topic-btn" onclick="setTopic(this,'FG / PAT Snapping')">🥅 FG / PAT Snapping</button>
-      <button class="topic-btn" onclick="setTopic(this,'Strength & Power')">💪 Strength & Power</button>
-      <button class="topic-btn" onclick="setTopic(this,'Speed & Conditioning')">⚡ Speed & Conditioning</button>
-      <button class="topic-btn" onclick="setTopic(this,'Blocking & Gunner')">🛡️ Blocking & Gunner</button>
-      <button class="topic-btn" onclick="setTopic(this,'Nutrition & Recovery')">🥗 Nutrition & Recovery</button>
-      <button class="topic-btn" onclick="setTopic(this,'Recruiting & Film')">🎓 Recruiting & Film</button>
-      <button class="topic-btn" onclick="setTopic(this,'Mental Game')">🧠 Mental Game</button>
+      <button class="topic-btn active" onclick="setTopic(this, 'Technique and Drills')">🎯 Technique and Drills</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Punt Snapping')">🏈 Punt Snapping</button>
+      <button class="topic-btn" onclick="setTopic(this, 'FG and PAT Snapping')">🥅 FG and PAT Snapping</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Strength and Power')">💪 Strength and Power</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Speed and Conditioning')">⚡ Speed and Conditioning</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Blocking and Gunner')">🛡️ Blocking and Gunner</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Nutrition and Recovery')">🥗 Nutrition and Recovery</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Recruiting and Film')">🎓 Recruiting and Film</button>
+      <button class="topic-btn" onclick="setTopic(this, 'Mental Game')">🧠 Mental Game</button>
     </div>
     <div class="level-section">
       <div class="sidebar-label">My Level</div>
       <div class="level-pills">
-        <button class="level-pill" onclick="setLevel(this,'Youth')">Youth</button>
-        <button class="level-pill active" onclick="setLevel(this,'HS')">HS</button>
-        <button class="level-pill" onclick="setLevel(this,'College')">College</button>
-        <button class="level-pill" onclick="setLevel(this,'NFL')">NFL</button>
+        <button class="level-pill" onclick="setLevel(this, 'Youth')">Youth</button>
+        <button class="level-pill active" onclick="setLevel(this, 'HS')">HS</button>
+        <button class="level-pill" onclick="setLevel(this, 'College')">College</button>
+        <button class="level-pill" onclick="setLevel(this, 'NFL')">NFL</button>
       </div>
     </div>
   </div>
@@ -108,85 +247,82 @@
   <div id="chat-main">
     <div id="chat-area">
       <div id="welcome">
-        <div style="font-size:3rem;animation:bball 2s infinite;">🏈</div>
+        <div style="font-size:3rem; animation:bball 2s infinite;">🏈</div>
         <h2>YOUR LONG SNAPPING COACH</h2>
         <p>Expert AI coaching from youth to NFL. Punt and FG snapping treated as the distinct skills they are. Select your level and ask anything.</p>
         <div class="quick-grid">
-          <button class="quick-btn" onclick="sendQuick('Break down punt snapping mechanics and distances by level')"><div class="quick-label">🏈 Punt Snap</div>Punt snap mechanics & distances by level</button>
-          <button class="quick-btn" onclick="sendQuick('Explain FG/PAT snapping — what does snapping to a spot mean?')"><div class="quick-label">🥅 FG Snap</div>FG/PAT — what snapping to a spot means</button>
-          <button class="quick-btn" onclick="sendQuick('Give me specific drills for both punt and FG snapping')"><div class="quick-label">⚡ Drills</div>Drills for punt and FG snapping</button>
-          <button class="quick-btn" onclick="sendQuick('How do I get recruited as a long snapper for college football?')"><div class="quick-label">🎓 Recruiting</div>College recruiting roadmap</button>
-          <button class="quick-btn" onclick="sendQuick('Build me a strength program designed specifically for long snappers')"><div class="quick-label">💪 Strength</div>Strength program for long snappers</button>
-          <button class="quick-btn" onclick="sendQuick('How do I stay mentally locked in after a bad snap?')"><div class="quick-label">🧠 Mental Game</div>Staying locked in after a bad snap</button>
+          <button class="quick-btn" onclick="sendQuick('Break down punt snapping mechanics and distances by level')">
+            <div class="quick-label">🏈 Punt Snap</div>
+            Punt snap mechanics and distances by level
+          </button>
+          <button class="quick-btn" onclick="sendQuick('Explain FG and PAT snapping and what snapping to a spot means')">
+            <div class="quick-label">🥅 FG Snap</div>
+            FG and PAT snapping to a spot explained
+          </button>
+          <button class="quick-btn" onclick="sendQuick('Give me specific drills for both punt and FG snapping')">
+            <div class="quick-label">⚡ Drills</div>
+            Drills for punt and FG snapping
+          </button>
+          <button class="quick-btn" onclick="sendQuick('How do I get recruited as a long snapper for college football')">
+            <div class="quick-label">🎓 Recruiting</div>
+            College recruiting roadmap
+          </button>
+          <button class="quick-btn" onclick="sendQuick('Build me a strength program designed specifically for long snappers')">
+            <div class="quick-label">💪 Strength</div>
+            Strength program for long snappers
+          </button>
+          <button class="quick-btn" onclick="sendQuick('How do I stay mentally locked in after a bad snap')">
+            <div class="quick-label">🧠 Mental Game</div>
+            Staying locked in after a bad snap
+          </button>
         </div>
       </div>
+
       <div id="typing">
         <div class="avatar ai">🏈</div>
-        <div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="typing-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
       </div>
+
       <div id="error-msg"></div>
     </div>
+
     <div id="input-zone">
       <div id="input-row">
-        <textarea id="user-input" placeholder="Ask your long snapping coach anything... (Enter to send)" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea
+          id="user-input"
+          placeholder="Ask your long snapping coach anything... (Enter to send)"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
         <button id="send-btn" onclick="sendMessage()">➤</button>
       </div>
-      <div id="input-hint">SNAP PRO · Punt & FG Snapping · Youth through NFL · Enter to send</div>
+      <div id="input-hint">SNAP PRO · Punt and FG Snapping · Youth through NFL · Enter to send</div>
     </div>
   </div>
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are SNAP PRO — an elite AI coach specializing in long snapping at every level of football, from youth through the NFL.
+var SYSTEM_PROMPT = "You are SNAP PRO, an elite AI coach specializing in long snapping at every level of football from youth through the NFL.\n\nPUNT SNAPPING DISTANCES BY LEVEL:\n- Youth: 7-10 yards to the punter\n- High School: 12-13 yards to the punter\n- College: 13-15 yards to the punter\n- NFL: 15 yards (standard professional distance)\n\nPUNT TARGET: The punters hands, a moving target. Lead the punter slightly. Trajectory is chest to thigh height, catchable spiral. Timing: Youth 1.0-1.2s, HS 0.8-0.9s, College 0.75-0.8s, NFL 0.70-0.75s.\n\nFIELD GOAL AND PAT SNAPPING - completely different from punt:\n- Youth: 5-6 yards, HS: 6-7 yards, College: 7-8 yards, NFL: 8 yards\n\nFG TARGET: A SPOT ON THE GROUND, not a person. The holder sets hands at a fixed location. Ball must come TO the spot. Holder does NOT move to catch it. Timing: NFL 0.60-0.65s, lower levels 0.65-0.75s. Trajectory is lower and flatter than punt. Lace control is critical so holder can rotate laces to kicker in one motion.\n\nTECHNIQUE: Stance with feet shoulder-width, toes out, hips above knees, back flat, head down. Grip with laces correct, index finger on tip, wrist cocked. Full extension and follow through on release.\n\nDRILLS: Punt - snap at correct distance for level, timed reps, consistency chart. FG - snap to taped X on ground, lace position drill, blindfold snaps to spot. Both - wall snaps, mirror snaps, bungee resistance, video review.\n\nSTRENGTH: Deadlift, Romanian deadlift, hex bar deadlift for hip hinge power. Pull-ups, rows, shoulder press, triceps. Core work including pallof press and landmine rotations. Power cleans and medicine ball work. Grip and forearm work for lace control.\n\nSPEED: Sub 5.0 forty at college and pro levels. 10-yard burst for coverage lane release. Gunner releases using rip, swim, and push-pull techniques.\n\nBLOCKING: On FG block the DT or nose guard post-snap. On punt release immediately into coverage lane. Practice tackling in space with proper angles.\n\nNUTRITION: NFL 240-265 lbs, College 225-255 lbs, HS 200-240 lbs. Complex carbs before practice, 20-40g protein post-workout. Creatine 5g per day. Sleep 8-9 hours.\n\nRECRUITING: Film from directly behind center showing 10 or more punt snaps and 10 or more FG snaps. Contact coaches sophomore year. Attend Chris Rubio, Greg Autry, and ACES Football camps. Preferred walk-on is a legitimate path to college.\n\nMENTAL GAME: Same pre-snap routine every time. Short memory after bad snaps, reset in 3 seconds. Visualize perfect snaps daily for both punt and FG.\n\nAlways tailor advice to the players specific level. Be direct, technical, and specific with real numbers and drill names.";
 
-PUNT SNAPPING — DISTANCES BY LEVEL:
-- Youth: 7-10 yards to the punter
-- High School: 12-13 yards to the punter
-- College: 13-15 yards to the punter
-- NFL: 15 yards (standard professional distance)
-Target: PUNTER'S HANDS — a moving target. Lead the punter slightly.
-Trajectory: chest-to-thigh height, catchable spiral.
-Timing: Youth 1.0-1.2s | HS 0.8-0.9s | College 0.75-0.8s | NFL 0.70-0.75s
-
-FIELD GOAL & PAT SNAPPING — completely different from punt:
-- Youth: 5-6 yards | HS: 6-7 yards | College: 7-8 yards | NFL: 8 yards
-Target: A SPOT ON THE GROUND — not a person. The holder sets hands at a fixed location. Ball must come TO the spot. Holder does NOT move to catch it.
-Timing: NFL 0.60-0.65s | Lower levels 0.65-0.75s
-Trajectory: lower and flatter than punt.
-Lace control critical: holder must rotate laces to kicker in one motion. An inch off costs rotation time.
-
-TECHNIQUE: Stance — feet shoulder-width, toes out, hips above knees, back flat, head down. Grip — laces correct, index finger on tip, wrist cocked. Release — full extension, follow through.
-
-DRILLS: Punt — snap at correct distance for level, timed reps, consistency chart. FG — snap to taped X on ground, lace position drill, blindfold snaps. Both — wall snaps, mirror snaps, bungee resistance, video review.
-
-STRENGTH: Deadlift, RDL, hex bar (hip hinge = snap power). Pull-ups, rows, shoulder press. Core: pallof press, landmine rotations. Power cleans. Grip/forearm work for lace control.
-
-SPEED: Sub-5.0 forty at college/pro. 10-yard burst for coverage release. Gunner releases: rip, swim, push-pull.
-
-BLOCKING: FG — block DT/nose guard post-snap. Punt — release into coverage lane. Tackling in space, special teams IQ.
-
-NUTRITION: NFL 240-265 lbs | College 225-255 | HS 200-240. Complex carbs pre-practice, 20-40g protein post-workout. Creatine 5g/day. Sleep 8-9 hrs.
-
-RECRUITING: Film from directly behind center — 10+ punt + 10+ FG snaps. Contact coaches sophomore year. Camps: Chris Rubio, Greg Autry, ACES Football. Walk-on is a legitimate path.
-
-MENTAL GAME: Same pre-snap routine every time. Short memory after bad snaps — reset in 3 seconds. Visualize perfect snaps daily.
-
-Always tailor advice to the player's level. Be direct, technical, and specific with real numbers.`;
-
-let currentTopic = 'Technique & Drills';
-let currentLevel = 'HS';
-let isLoading = false;
-let history = [];
+var currentTopic = 'Technique and Drills';
+var currentLevel = 'HS';
+var isLoading = false;
+var history = [];
 
 function setTopic(btn, topic) {
   currentTopic = topic;
-  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.topic-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
 }
 
 function setLevel(pill, level) {
   currentLevel = level;
-  document.querySelectorAll('.level-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.level-pill').forEach(function(p) { p.classList.remove('active'); });
   pill.classList.add('active');
 }
 
@@ -196,7 +332,10 @@ function autoResize(el) {
 }
 
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 }
 
 function sendQuick(text) {
@@ -205,13 +344,13 @@ function sendQuick(text) {
 }
 
 function hideWelcome() {
-  const w = document.getElementById('welcome');
+  var w = document.getElementById('welcome');
   if (w) w.remove();
 }
 
 function showError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = '⚠️ ' + msg;
+  var el = document.getElementById('error-msg');
+  el.textContent = 'Error: ' + msg;
   el.style.display = 'block';
 }
 
@@ -222,17 +361,17 @@ function hideError() {
 function addMessage(role, content) {
   hideWelcome();
   hideError();
-  const area = document.getElementById('chat-area');
-  const typing = document.getElementById('typing');
+  var area = document.getElementById('chat-area');
+  var typing = document.getElementById('typing');
 
-  const div = document.createElement('div');
+  var div = document.createElement('div');
   div.className = 'message ' + role;
 
-  const avatar = document.createElement('div');
+  var avatar = document.createElement('div');
   avatar.className = 'avatar ' + role;
   avatar.textContent = role === 'ai' ? '🏈' : '👤';
 
-  const bubble = document.createElement('div');
+  var bubble = document.createElement('div');
   bubble.className = 'bubble';
   bubble.textContent = content;
 
@@ -242,10 +381,10 @@ function addMessage(role, content) {
   area.scrollTop = area.scrollHeight;
 }
 
-async function sendMessage() {
+function sendMessage() {
   if (isLoading) return;
-  const input = document.getElementById('user-input');
-  const text = input.value.trim();
+  var input = document.getElementById('user-input');
+  var text = input.value.trim();
   if (!text) return;
 
   input.value = '';
@@ -258,36 +397,40 @@ async function sendMessage() {
   document.getElementById('typing').style.display = 'flex';
   document.getElementById('chat-area').scrollTop = 99999;
 
-  const fullMsg = `Player level: ${currentLevel} | Topic: ${currentTopic}\n\n${text}`;
-  const newHistory = [...history, { role: 'user', content: fullMsg }];
+  var fullMsg = 'Player level: ' + currentLevel + ' | Topic: ' + currentTopic + '\n\n' + text;
+  var newHistory = history.concat([{ role: 'user', content: fullMsg }]);
 
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: SYSTEM_PROMPT,
-        messages: newHistory
-      })
-    });
-
-    const data = await res.json();
-
-    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-    const reply = data.content?.[0]?.text;
-    if (!reply) throw new Error('No response received. Please try again.');
-
-    history = [...newHistory, { role: 'assistant', content: reply }];
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system: SYSTEM_PROMPT,
+      messages: newHistory
+    })
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
     document.getElementById('typing').style.display = 'none';
+    if (data.error) {
+      showError(data.error.message || JSON.stringify(data.error));
+      return;
+    }
+    var reply = data.content && data.content[0] && data.content[0].text;
+    if (!reply) {
+      showError('No response received. Please try again.');
+      return;
+    }
+    history = newHistory.concat([{ role: 'assistant', content: reply }]);
     addMessage('ai', reply);
-
-  } catch (err) {
+  })
+  .catch(function(err) {
     document.getElementById('typing').style.display = 'none';
     showError(err.message || 'Something went wrong. Please try again.');
-  } finally {
+  })
+  .finally(function() {
     isLoading = false;
     document.getElementById('send-btn').disabled = false;
-  }
+  });
 }
 </script>
 </body>
