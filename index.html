@@ -15,19 +15,13 @@
   @keyframes glow{0%,100%{opacity:1;}50%{opacity:0.4;}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   @keyframes dotbounce{0%,80%,100%{transform:translateY(0);opacity:0.4;}40%{transform:translateY(-5px);opacity:1;}}
-
-  /* HEADER */
   #header{background:var(--dark);border-bottom:2px solid var(--gold);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;}
   .logo-main{font-family:'Bebas Neue',cursive;font-size:1.9rem;color:var(--gold);letter-spacing:3px;}
   .logo-sub{font-family:'Bebas Neue',cursive;font-size:0.9rem;color:var(--steel);letter-spacing:4px;border-left:1px solid var(--border);padding-left:10px;margin-left:10px;}
   .status-badge{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:5px 12px;}
   .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:glow 2s infinite;}
   .status-text{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;color:var(--steel);letter-spacing:2px;text-transform:uppercase;}
-
-  /* LAYOUT */
   #app{display:flex;flex:1;overflow:hidden;}
-
-  /* SIDEBAR */
   #sidebar{width:215px;background:var(--dark);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
   .sidebar-section{padding:14px 12px 8px;}
   .sidebar-label{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
@@ -38,12 +32,8 @@
   .level-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
   .level-pill{background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;color:var(--steel);cursor:pointer;transition:all 0.15s;}
   .level-pill.active{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:700;}
-
-  /* CHAT */
   #chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
   #chat-area{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
-
-  /* WELCOME */
   #welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:14px;padding:20px;}
   #welcome h2{font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:4px;color:var(--gold);}
   #welcome p{color:#7a90a8;max-width:440px;line-height:1.6;font-size:0.93rem;}
@@ -51,8 +41,6 @@
   .quick-btn{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--steel);font-size:0.82rem;cursor:pointer;text-align:left;line-height:1.4;transition:all 0.2s;}
   .quick-btn:hover{border-color:var(--gold);color:var(--white);}
   .quick-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
-
-  /* MESSAGES */
   .message{display:flex;gap:12px;animation:fadeUp 0.25s ease;max-width:88%;}
   .message.user{flex-direction:row-reverse;align-self:flex-end;}
   .message.ai{align-self:flex-start;}
@@ -62,18 +50,12 @@
   .bubble{padding:12px 16px;font-size:0.93rem;line-height:1.75;white-space:pre-wrap;}
   .message.ai .bubble{background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
   .message.user .bubble{background:#1a2438;border:1px solid #2a3550;border-radius:6px 2px 6px 6px;}
-
-  /* TYPING */
   #typing{display:none;align-items:center;gap:12px;}
   .typing-dots{display:flex;gap:5px;padding:12px 16px;background:#161c2a;border:1px solid var(--border);border-radius:2px 6px 6px 6px;}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:dotbounce 1.2s infinite;}
   .dot:nth-child(2){animation-delay:0.2s;}
   .dot:nth-child(3){animation-delay:0.4s;}
-
-  /* ERROR */
-  #error-msg{display:none;background:rgba(224,53,53,0.08);border:1px solid rgba(224,53,53,0.25);border-radius:6px;padding:12px 16px;color:var(--red);font-size:0.85rem;line-height:1.5;}
-
-  /* INPUT */
+  #error-msg{display:none;background:rgba(224,53,53,0.08);border:1px solid rgba(224,53,53,0.25);border-radius:6px;padding:12px 16px;color:var(--red);font-size:0.85rem;line-height:1.5;margin:0 0 8px 0;}
   #input-zone{border-top:1px solid var(--border);background:var(--dark);padding:12px 24px 14px;flex-shrink:0;}
   #input-row{display:flex;gap:10px;align-items:flex-end;max-width:800px;margin:0 auto;}
   #user-input{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:var(--white);font-size:0.93rem;resize:none;min-height:46px;max-height:130px;line-height:1.5;transition:border-color 0.2s;font-family:system-ui;outline:none;}
@@ -82,13 +64,7 @@
   #send-btn:hover{background:#ffd54f;}
   #send-btn:disabled{background:#2a3040;cursor:not-allowed;}
   #input-hint{text-align:center;font-size:0.67rem;color:#1e2a38;margin-top:7px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;}
-
-  @media(max-width:600px){
-    #sidebar{display:none;}
-    .quick-grid{grid-template-columns:1fr;}
-    #chat-area{padding:14px;}
-    #input-zone{padding:10px 14px 12px;}
-  }
+  @media(max-width:600px){#sidebar{display:none;}.quick-grid{grid-template-columns:1fr;}#chat-area{padding:14px;}#input-zone{padding:10px 14px 12px;}}
 </style>
 </head>
 <body>
@@ -161,95 +137,41 @@
 </div>
 
 <script>
-const SYSTEM_PROMPT = `You are SNAP PRO — an elite, world-class AI coach specializing exclusively in long snapping at every level of football, from youth leagues through the NFL. You have the combined expertise of top long snapping coaches like Ethan Albright, Patrick Mannelly, and elite private coaches.
+const SYSTEM_PROMPT = `You are SNAP PRO — an elite AI coach specializing in long snapping at every level of football, from youth through the NFL.
 
-TECHNIQUE & DRILLS:
-Proper stance: feet shoulder-width, toes slightly out, hips above knees, balanced weight distribution, back flat, head down through the snap.
-Grip mechanics: laces positioned correctly, index finger pressure on tip, firm but not tense grip, wrist cocked for power transfer.
-Release: snap begins from cocked wrist position, full arm extension through the ball, follow through matters.
-
-PUNT SNAPPING — DISTANCES BY LEVEL (this is critical):
+PUNT SNAPPING — DISTANCES BY LEVEL:
 - Youth: 7-10 yards to the punter
 - High School: 12-13 yards to the punter
 - College: 13-15 yards to the punter
-- NFL: 15 yards — this is the standard professional punt snap distance
+- NFL: 15 yards (standard professional distance)
+Target: PUNTER'S HANDS — a moving target. Lead the punter slightly.
+Trajectory: chest-to-thigh height, catchable spiral.
+Timing: Youth 1.0-1.2s | HS 0.8-0.9s | College 0.75-0.8s | NFL 0.70-0.75s
 
-Target: the PUNTER'S HANDS — a person-sized moving target at the appropriate distance for the level.
-The snapper must lead the punter slightly, accounting for the punter's drop and body movement.
-Trajectory: chest-to-thigh height, a catchable spiral the punter can handle cleanly and drop in rhythm.
-Timing standards:
-- Youth: 1.0-1.2 seconds is acceptable, work toward sub-1.0
-- High School: 0.8-0.9 seconds
-- College: 0.75-0.8 seconds
-- NFL: 0.7-0.75 seconds — anything above 0.8 at the NFL level is dangerously slow
+FIELD GOAL & PAT SNAPPING — completely different from punt:
+- Youth: 5-6 yards | HS: 6-7 yards | College: 7-8 yards | NFL: 8 yards
+Target: A SPOT ON THE GROUND — not a person. The holder sets hands at a fixed location. Ball must come TO the spot. Holder does NOT move to catch it.
+Timing: NFL 0.60-0.65s | Lower levels 0.65-0.75s
+Trajectory: lower and flatter than punt.
+Lace control critical: holder must rotate laces to kicker in one motion. An inch off costs rotation time.
 
-FIELD GOAL & PAT SNAPPING — fundamentally different from punt:
-Distance by level:
-- Youth: 5-6 yards to the holder's spot
-- High School: 6-7 yards to the holder's spot
-- College: 7-8 yards to the holder's spot
-- NFL: 8 yards — this is the standard professional FG/PAT snap distance
+TECHNIQUE: Stance — feet shoulder-width, toes out, hips above knees, back flat, head down. Grip — laces correct, index finger on tip, wrist cocked. Release — full extension, follow through.
 
-Target: a SPOT ON THE GROUND — not a person, not moving hands.
-The holder sets their hands at a precise, fixed location just off the turf.
-The ball must come TO that spot — the holder does NOT move to catch it.
-Snap must arrive in 0.60-0.65 seconds (NFL standard). Lower levels 0.65-0.75 seconds.
-Trajectory is lower and flatter than a punt snap.
-Lace control is critical: laces must arrive positioned so the holder can rotate them to face the kicker in one smooth motion.
-An inch off the spot costs the holder critical rotation time and kills the kick.
+DRILLS: Punt — snap at correct distance for level, timed reps, consistency chart. FG — snap to taped X on ground, lace position drill, blindfold snaps. Both — wall snaps, mirror snaps, bungee resistance, video review.
 
-KEY COACHING POINT:
-- Punt = lead the punter's hands at the correct distance for your level (15 yards at NFL)
-- FG/PAT = hit a fixed spot on the ground (8 yards at NFL, shorter at lower levels)
+STRENGTH: Deadlift, RDL, hex bar (hip hinge = snap power). Pull-ups, rows, shoulder press. Core: pallof press, landmine rotations. Power cleans. Grip/forearm work for lace control.
 
-DRILLS:
-Punt drills: snap at the correct distance for your level, partner walks/shifts pre-snap, consistency charting, timed reps, work up to full distance progressively.
-FG drills: snap to a taped X on the ground, holder kneels with hands at fixed position, lace drill, blindfold snaps to spot, timed reps.
-Both: wall snaps, bungee resistance, mirror snaps, upside-down work, burst count practice, video review.
+SPEED: Sub-5.0 forty at college/pro. 10-yard burst for coverage release. Gunner releases: rip, swim, push-pull.
 
-STRENGTH & CONDITIONING:
-Primary lifts: Deadlift, Romanian deadlift, hex bar deadlift — hip hinge power is the engine of the snap.
-Upper body: Pull-ups, rows, shoulder press, tricep work for follow-through power.
-Core: Anti-rotation (pallof press), plank variations, landmine rotations.
-Explosive: Power cleans, medicine ball hip hinge throws, band-resisted snaps.
-Grip & forearm: Grip strengtheners, wrist roller — critical for lace control on FG and velocity on long punt snaps.
-Programs: Youth (bodyweight focus), HS (3-day split), College (4-day periodized), NFL (year-round periodized).
+BLOCKING: FG — block DT/nose guard post-snap. Punt — release into coverage lane. Tackling in space, special teams IQ.
 
-SPEED & CONDITIONING:
-Sub-5.0 forty preferred at college and pro levels.
-10-yard burst out of stance for coverage lane release.
-Agility: cone drills for evading jammers post-snap.
-Gunner release techniques: rip, swim, push-pull.
+NUTRITION: NFL 240-265 lbs | College 225-255 | HS 200-240. Complex carbs pre-practice, 20-40g protein post-workout. Creatine 5g/day. Sleep 8-9 hrs.
 
-BLOCKING & COVERAGE:
-FG/PAT post-snap: block the defensive tackle or nose guard before releasing.
-Punt post-snap: release immediately into coverage lane.
-Punt gunner release: rip, swim, push-pull against jammers — practice every day.
-Tackling in space: proper form tackle angles on returners.
-Special teams IQ: shield punt, spread punt, traditional protections.
+RECRUITING: Film from directly behind center — 10+ punt + 10+ FG snaps. Contact coaches sophomore year. Camps: Chris Rubio, Greg Autry, ACES Football. Walk-on is a legitimate path.
 
-NUTRITION & RECOVERY:
-Body composition: NFL 240-265 lbs, College 225-255 lbs, HS 200-240 lbs, Youth focus on healthy habits.
-Pre-practice: complex carbs 2-3 hours before, light snack 30-60 min before.
-Post-workout: 20-40g protein within 45 minutes, replenish glycogen with carbs.
-Hydration: 0.5 oz per lb of bodyweight daily, add electrolytes on heavy training days.
-Sleep: 8-9 hours — most skill development happens during sleep.
-Supplements: Creatine monohydrate 5g/day, protein powder if needed, electrolytes.
-Recovery: Foam rolling hip flexors and thoracic spine daily, contrast showers.
+MENTAL GAME: Same pre-snap routine every time. Short memory after bad snaps — reset in 3 seconds. Visualize perfect snaps daily.
 
-RECRUITING:
-High School: Highlight film by sophomore year — 10+ clean punt snaps AND 10+ FG/PAT snaps filmed from directly behind center.
-Camps: Chris Rubio Long Snapping, Greg Autry, ACES Football.
-College: Preferred walk-on is a very common and legitimate path. Email coaches directly with your film.
-NFL path: College starter → UDFA → Training camp → Practice squad → 53-man roster.
-
-MENTAL GAME:
-Pre-snap routine: same routine every snap — stance, grip, breath, focal point, snap.
-Short memory: every elite snapper has had a bad snap. The great ones forget it in 3 seconds and reset.
-Visualization: mentally rehearse perfect snaps daily — both punt and FG.
-Crowd noise: practice silent count snapping.
-
-Always adjust advice to the player's specific level. Be direct, technical, motivating, and specific.`;
+Always tailor advice to the player's level. Be direct, technical, and specific with real numbers.`;
 
 let currentTopic = 'Technique & Drills';
 let currentLevel = 'HS';
@@ -302,7 +224,6 @@ function addMessage(role, content) {
   hideError();
   const area = document.getElementById('chat-area');
   const typing = document.getElementById('typing');
-  const error = document.getElementById('error-msg');
 
   const div = document.createElement('div');
   div.className = 'message ' + role;
@@ -318,7 +239,6 @@ function addMessage(role, content) {
   div.appendChild(avatar);
   div.appendChild(bubble);
   area.insertBefore(div, typing);
-  error.scrollIntoView({ behavior: 'smooth', block: 'end' });
   area.scrollTop = area.scrollHeight;
 }
 
@@ -346,17 +266,16 @@ async function sendMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1000,
         system: SYSTEM_PROMPT,
         messages: newHistory
       })
     });
 
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message || 'API error');
+
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
     const reply = data.content?.[0]?.text;
-    if (!reply) throw new Error('No response received');
+    if (!reply) throw new Error('No response received. Please try again.');
 
     history = [...newHistory, { role: 'assistant', content: reply }];
     document.getElementById('typing').style.display = 'none';
